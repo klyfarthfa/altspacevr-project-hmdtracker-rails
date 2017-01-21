@@ -32,10 +32,9 @@ class HmdInfoTest < ActiveSupport::TestCase
   test "updating to an invalid state creates a verification error" do
     hmd = Hmd.first
     hmd.state = :unannounced
-    assert !hmd.save
-
-    assert hmd.state != :unannounced
-
+    assert_not hmd.valid?
+    assert_not hmd.save
+    assert_not_equal :unannounced, hmd.reload.state
   end
 
   test "can change state properly" do
@@ -58,8 +57,17 @@ class HmdInfoTest < ActiveSupport::TestCase
     assert_equal :devkit, hmd.reload.state
   end
 
-  # test "changing states creates a new state model" do
+  test "changing states creates a new state model" do
+    hmd = Hmd.first
+    hmd.state = :announced
+    hmd.save!
 
-  # end
+    state_count = hmd.hmd_states.count
+
+    hmd.state = :devkit
+    hmd.save!
+
+    assert hmd.hmd_states.count > state_count
+  end
 
 end

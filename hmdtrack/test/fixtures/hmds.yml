@@ -8,6 +8,5 @@ one:
   id: 1
   name: Rift
   company: Oculus
-  state: :released
   image_url: "http://i.imgur.com/EY3KHSz.jpg"
   announced_at: 2012-08-01
