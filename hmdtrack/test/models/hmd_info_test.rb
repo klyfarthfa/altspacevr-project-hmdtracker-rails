@@ -8,9 +8,8 @@ class HmdInfoTest < ActiveSupport::TestCase
     hmd.image_url = 'http://i.imgur.com/EY3KHSz.jpg'
     hmd.announced_at = Time.now
     hmd.state = :announced
-    hmd.save!
+    assert hmd.save
 
-    assert hmd
   end
 
   test "hmd state starts with :announced" do
