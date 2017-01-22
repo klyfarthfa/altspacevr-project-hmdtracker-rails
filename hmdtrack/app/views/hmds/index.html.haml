@@ -1,25 +1,43 @@
-%table.hmds
-  %thead
-    %th
-      &nbsp;
-    %th
-      HMD Name
-    %th
-      Announced
-    %th
-      Company
-    %th
-      State
-    %th
-      &nbsp;
-  - @hmds.each do |hmd|
-    %tr
-      %td
-        %img{ width: 150, height: 100, src: hmd.image_url }
-      %td= hmd.name
-      %td= hmd.announced_at.to_s(:long_ordinal)
-      %td= hmd.company
-      %td= hmd.state
-      %td
-        %a{ href: "/hmds/#{hmd.id}/edit"}
-          Edit
+%script{type: 'text/x-template', id: 'hmd-row'}
+  :plain
+    <tr>
+      <td><img width='150' height='100' :src="hmd.image_url"/></td>
+      <td>{{ hmd.name }}</td>
+      <td>{{ hmd.announced_at }}</td>
+      <td>{{ hmd.company }}</td>
+      <td>
+        <div v-if="editmode">
+          <select name="hmd[state]" id="hmd_state" v-model="thestate">
+            <option value="announced">Announced</option>
+            <option value="devkit">DevKit</option>
+            <option value="released">Released</option></select>
+          </select>
+        </div>
+        <div v-else>{{ thestate }}</div>
+      </td>
+      <td>
+        <div v-if="editmode">
+          <button @click="updateState">Update</button>
+        </div>
+        <div v-else><a @click="editmode = true" href="#">Edit</a></div>
+      </td>
+    </tr>
+
+#hmds
+  %table.hmds
+    %thead
+      %th
+        &nbsp;
+      %th
+        HMD Name
+      %th
+        Announced
+      %th
+        Company
+      %th
+        State
+      %th
+        &nbsp;
+    %tbody
+      %tr{ "is" => "hmd-row", "v-for" => "hmd in hmds",  ":hmd" => "hmd"}
+

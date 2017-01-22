@@ -24,6 +24,9 @@ module AuditedState
         end
         @dirty_state = nil
         @state_update = false
+        #Ensure state is updated immediately for json
+        latest_state(true) #would be latest_state.reload in Rails 5
+        
       end
 
       define_method("state") do
@@ -43,6 +46,21 @@ module AuditedState
         result
       end
 
+      #redefine as_json to auto-include state
+      define_method("as_json") do |options = nil|
+        if options
+          if options[:methods].is_a? Array
+            options[:methods] << :state
+          elsif options[:methods]
+            options[:methods] = [:state] << options[:methods]
+          else
+            options[:methods] = [:state]
+          end
+        else
+          options = {methods: :state}
+        end
+        super(options)
+      end
     end
     def is_audited_state_for(model)
       @@stated_model = model
